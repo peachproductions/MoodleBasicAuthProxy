@@ -1,0 +1,21 @@
+{
+    "name": "foresightmobile/moodlebasicauthproxy",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Jeff Lloyd",
+            "email": "jeff.lloyd66@googlemail.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/moodle/moodle.git"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "require-dev": {
+        "moodle/moodle": "v3.3.2"
+    }
+}
