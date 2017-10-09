@@ -58,6 +58,8 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
         $this->log("In user_login");
         $host = $this->config->host;
         $this->log("Host = ${host}");
+        $this->log("${username}");
+        $this->log("${password}");
 
         $curl = curl_init();
         curl_setopt_array($curl, array(
@@ -67,12 +69,12 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
             CURLOPT_NOBODY => true,
             CURLOPT_USERPWD => "$username:$password",
             CURLOPT_TIMEOUT => 30,
-            CURLOPT_POST => true
+            CURLOPT_POST => true,
         ));
         $result = curl_exec($curl);
         curl_close($curl);
 
-        $this->log($result);
+        $this->log("Result: " . $result);
 
         if (strpos($result, '200 OK')) {
             return true;
@@ -112,6 +114,5 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
         global $CFG;
 
         error_log("***** BasicAuthProxy: ${msg}");
-
     }
 }
