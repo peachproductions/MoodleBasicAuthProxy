@@ -1,5 +1,5 @@
 AuthType Basic
 AuthName "Please Log In"
-AuthUserFile /usr/local/apache2/htdocs/auth/.htpasswd
+AuthUserFile /usr/local/apache2/htdocs/.htpasswd
 Require valid-user
 

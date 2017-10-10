@@ -10,11 +10,12 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/authlib.php');
+require_once(dirname(__FILE__) . '/vendor/autoload.php');
+
+use GuzzleHttp\Client;
 
 class auth_plugin_basicauthproxy extends auth_plugin_base
 {
-    const DEBUG = true;
-
     /**
      * Constructor.
      */
@@ -31,7 +32,6 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
      */
     public function pre_loginpage_hook()
     {
-        $this->log("In pre_loginpage_hook");
         $this->loginpage_hook();
     }
 
@@ -55,45 +55,25 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
     public function user_login($username, $password)
     {
         global $CFG, $DB;
-        $this->log("In user_login");
+
         $host = $this->config->host;
-        $this->log("Host = ${host}");
-        $this->log("${username}");
-        $this->log("${password}");
+        $headers = [
+            'Accept' => 'application/json',
+            'Authorization' => 'Basic ' . base64_encode("$username:$password"),
+        ];
+        $client = new Client([
+                'base_uri' => $host,
+                'headers' => $headers
+            ]
+        );
 
-        $curl = curl_init();
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $host,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_HEADER => true,
-            CURLOPT_NOBODY => true,
-            CURLOPT_USERPWD => "$username:$password",
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_POST => true,
-        ));
-        $result = curl_exec($curl);
-        curl_close($curl);
-
-        $this->log("Result: " . $result);
-
-        if (strpos($result, '200 OK')) {
+        try {
+            $response = $client->request('POST');
+            $CFG->payload = json_decode($response->getBody()->getContents(), true);
             return true;
-        } else {
+        } catch (Exception $e) {
             return false;
         }
-    }
-
-    /**
-     * This method is called from authenticate_user_login() right after the user object is generated.
-     * This gives the auth plugin an option to make modification to the user object
-     * before the verification process starts.
-     *
-     * @param stdClass $user The user
-     */
-    public function pre_user_login_hook(&$user)
-    {
-        $this->log("pre_user_login_hook");
-        $this->log(json_encode($user));
     }
 
     /**
@@ -103,15 +83,35 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
      * @param string $username The username
      * @param string $password The password
      */
-    public function user_authenticated_hook($user, $username, $password)
+    public function user_authenticated_hook(&$user, $username, $password)
     {
-        $this->log("user_authenticated_hook");
+        global $CFG, $DB;
+
+        $this->log("user_authenticated_hook with user ID: $user->id");
+        $this->log($CFG->payload);
+    }
+
+    public function is_internal()
+    {
+        return false;
+    }
+
+    public function is_synchronised_with_external()
+    {
+        return true;
     }
 
     private function log($msg)
     {
-        if (!self::DEBUG) return;
         global $CFG;
+        if (!getenv('MOODLE_DEBUG')) return;
+
+        if (is_object($msg)) {
+            $msg = json_encode($msg);
+        }
+        if (is_array($msg)) {
+            $msg = print_r($msg, true);
+        }
 
         error_log("***** BasicAuthProxy: ${msg}");
     }

@@ -11,6 +11,6 @@ if ($ADMIN->fulltree) {
     // URL
     $settings->add(new admin_setting_configtext('auth_basicauthproxy/host', get_string('auth_basicauthproxyhost_key', 'auth_basicauthproxy'),
             get_string('auth_basicauthproxyhost', 'auth_basicauthproxy'),
-            'http://auth/auth/index.html', PARAM_RAW));
+            '', PARAM_RAW));
 
 }

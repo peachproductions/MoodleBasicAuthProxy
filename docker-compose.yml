@@ -8,9 +8,9 @@ services:
       - '10443:443'
     volumes:
       - ./development/auth/httpd.conf:/usr/local/apache2/conf/httpd.conf
-      - ./development/auth/.htaccess:/usr/local/apache2/htdocs/auth/.htaccess
-      - ./development/auth/.htpasswd:/usr/local/apache2/htdocs/auth/.htpasswd
-      - ./development/auth/index.html:/usr/local/apache2/htdocs/auth/index.html
+      - ./development/auth/.htaccess:/usr/local/apache2/htdocs/.htaccess
+      - ./development/auth/.htpasswd:/usr/local/apache2/htdocs/.htpasswd
+      - ./development/auth/authentication_response.json:/usr/local/apache2/htdocs/response.json
 
   mariadb:
     image: 'bitnami/mariadb:latest'
@@ -21,6 +21,8 @@ services:
 
   moodle:
     image: 'bitnami/moodle:latest'
+    environment:
+      - MOODLE_DEBUG=1
     ports:
       - '80:80'
       - '443:443'

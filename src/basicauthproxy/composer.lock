@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "41be9f43fe685b432ce920d69dd7c324",
+    "content-hash": "4987861ddac477dcdef538366d595c1c",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -73,23 +73,23 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "dev-master",
+            "version": "v1.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "e9cdab6ff93ff789b5b599326c727f51d10893a6"
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/e9cdab6ff93ff789b5b599326c727f51d10893a6",
-                "reference": "e9cdab6ff93ff789b5b599326c727f51d10893a6",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/a59da6cf61d80060647ff4d3eb2c03a2bc694646",
+                "reference": "a59da6cf61d80060647ff4d3eb2c03a2bc694646",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.36"
+                "phpunit/phpunit": "^4.0"
             },
             "type": "library",
             "extra": {
@@ -120,20 +120,20 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2017-10-06T12:25:00+00:00"
+            "time": "2016-12-20T10:07:11+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
-            "version": "dev-master",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/psr7.git",
-                "reference": "d2537c86fa8b004c29e9b9f5e10028f0a29df101"
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/psr7/zipball/d2537c86fa8b004c29e9b9f5e10028f0a29df101",
-                "reference": "d2537c86fa8b004c29e9b9f5e10028f0a29df101",
+                "url": "https://api.github.com/repos/guzzle/psr7/zipball/f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
+                "reference": "f5b8a8512e2b58b0071a7280e39f14f72e05d87c",
                 "shasum": ""
             },
             "require": {
@@ -185,11 +185,11 @@
                 "uri",
                 "url"
             ],
-            "time": "2017-10-07T03:19:56+00:00"
+            "time": "2017-03-20T17:10:46+00:00"
         },
         {
             "name": "psr/http-message",
-            "version": "dev-master",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
@@ -238,41 +238,9 @@
             "time": "2016-08-06T14:39:51+00:00"
         }
     ],
-    "packages-dev": [
-        {
-            "name": "moodle/moodle",
-            "version": "v3.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/moodle/moodle.git",
-                "reference": "3d77676d51dd9bf54b4ab4f9515c1b90c90de355"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/moodle/moodle/zipball/3d77676d51dd9bf54b4ab4f9515c1b90c90de355",
-                "reference": "3d77676d51dd9bf54b4ab4f9515c1b90c90de355",
-                "shasum": ""
-            },
-            "require-dev": {
-                "mikey179/vfsstream": "^1.6",
-                "moodlehq/behat-extension": "3.33.1",
-                "phpunit/dbunit": "1.4.*",
-                "phpunit/phpunit": "5.5.*"
-            },
-            "type": "project",
-            "license": [
-                "GPL-3.0"
-            ],
-            "description": "Moodle - the world's open source learning platform",
-            "homepage": "https://moodle.org",
-            "support": {
-                "source": "https://github.com/moodle/moodle/tree/v3.3.2"
-            },
-            "time": "2017-09-09T20:48:09+00:00"
-        }
-    ],
+    "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
         "guzzlehttp/guzzle": 20
     },

@@ -14,7 +14,9 @@
         }
     ],
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "guzzlehttp/guzzle": "^6.2@dev"
+    },
     "require-dev": {
         "moodle/moodle": "v3.3.2"
     }
