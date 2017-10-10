@@ -8,8 +8,8 @@
 ##### Development setup
 Run the setup.sh bash script `./setup.sh`.
 
-##### Start docker Moodle container. From repo root directory:
-* docker-compose up
+##### Starting the docker Moodle container
+From repo root directory: `docker-compose up`
 
 Wait for this output before attempting to connect to moodle via browser 
 (**be aware that this can take several minutes to complete**):
@@ -33,15 +33,11 @@ moodle_1   | INFO  ==> Starting moodle...
 * https://localhost
 
 ##### Moodle Admin Login: 
-```
-user = user
-password = bitnami
-```
+Standard Docker Moodle Admin: user = 'user', password = 'bitnami'
      
 ##### Moodle Admin setup
 * Login to site using Moodle Admin credentials `user, bitnami`
 * Site administration > Plugins > Authentication > Manage authentication
-* disable all authentication plugins
 * enable HTTP Basic Authentication Proxy
 * Settings: URL = http://auth/response.json (docker auth service)
 * Save changes
@@ -49,15 +45,21 @@ password = bitnami
 ##### Turn on Moodle's Developer Debug mode
 * Site administration > Development > Debugging > Developer mode
 
-
 ##### Some test HTTP basic auth server credentials (username:password):
 Using these credentials should authenticate with the HTTP auth server and return a test JSON file.
-```
-jeff:letm31n
-test:test
-user1:password
-```
+* jeff:letm31n
+* test:test
+* user1:password
 
 ##### Tail Moodle error log:
-* docker-compose exec moodle bash
-* tail -f /tmp/php_errors.log
+```
+docker-compose exec moodle bash
+tail -f /tmp/php_errors.log
+```
+
+##### Accessing the Moodle Database
+```
+docker-compose exec moodle bash
+mysql -h mariadb -u root
+```
+
