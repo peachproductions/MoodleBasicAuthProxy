@@ -1,3 +1,10 @@
+<?php
+
+$firstname = "First_".substr(md5(microtime()),rand(0,26),3);
+$lastname = "Last_".substr(md5(microtime()),rand(0,26),3);
+$email = substr(md5(microtime()),rand(0,26),6)."@test.com";
+
+echo <<<JSON
 {
   "MainBackgroundColour": 16777215,
   "_id": "55283ac9b458390e005ff173",
@@ -1899,9 +1906,9 @@
     }
   ],
   "dirtyData": false,
-  "email": null,
+  "email": "$email",
   "ethnic": 0,
-  "firstName": "Chiara",
+  "firstName": "$firstname",
   "lastLoginDate": "22-06-15",
   "lessonAreaColour": 15785200,
   "lessonBackgroundColour": 16777215,
@@ -10003,7 +10010,7 @@
   "summaryMemoryPage": "Stage 1 Page 7",
   "summaryReadingPage": "Stage 2 Page 46",
   "summarySpellingPage": "Stage 1 Page 28",
-  "surname": "Funaro",
+  "surname": "$lastname",
   "syllabusTypeMemDic": true,
   "syllabusTypeReading": true,
   "syllabusTypeSpelling": true,
@@ -10012,3 +10019,4 @@
   "workAreaColour": 16777215,
   "yearGroup": 0
 }
+JSON;

@@ -39,17 +39,16 @@ Standard Docker Moodle Admin: user = 'user', password = 'bitnami'
 * Login to site using Moodle Admin credentials `user, bitnami`
 * Site administration > Plugins > Authentication > Manage authentication
 * enable HTTP Basic Authentication Proxy
-* Settings: URL = http://auth/response.json (docker auth service)
+* Settings: URL = http://auth/response.php (docker auth service)
 * Save changes
 
 ##### Turn on Moodle's Developer Debug mode
 * Site administration > Development > Debugging > Developer mode
 
 ##### Some test HTTP basic auth server credentials (username:password):
-Using these credentials should authenticate with the HTTP auth server and return a test JSON file.
-* jeff:letm31n
-* test:test
-* user1:password
+There are 100 users setup in the .htpasswd file for authentication:
+* Username: u0 ... u99
+* Password: password
 
 ##### Tail Moodle error log:
 ```
@@ -63,3 +62,8 @@ docker-compose exec moodle bash
 mysql -h mariadb -u root
 ```
 
+##### Installing the plugin
+* copy the 'basicauthproxy' directory and its contents to the Moodle server's directory: `/path/to/moodle/auth`. 
+It should sit at the same level as the other auth plugins, e.g. /email, /nologin, /oauth2, etc.
+* cd into the basicauthproxy directory and run `composer install`
+* restart Moodle - plugin should be visible in admin panel

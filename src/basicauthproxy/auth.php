@@ -1,6 +1,6 @@
 <?php
 /**
- * Use a remote login service and modify user
+ * Use a remote login service and enrol new user if not already in Moodle database
  *
  * @package auth_remote
  * @author Jeff Lloyd
@@ -12,7 +12,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->libdir . '/authlib.php');
 require_once(dirname(__FILE__) . '/vendor/autoload.php');
 
-use GuzzleHttp\Client;
+use BasicAuthProxy\AuthenticatorFactory;
 
 class auth_plugin_basicauthproxy extends auth_plugin_base
 {
@@ -22,26 +22,8 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
     public function __construct()
     {
         global $CFG;
-        $this->authtype = 'basicauthproxy';
+        $this->authtype = 'BasicAuthProxy';
         $this->config = get_config('auth_basicauthproxy');
-    }
-
-    /**
-     * Called when attempting to access a restricted page
-     * and the user is not logged in.
-     */
-    public function pre_loginpage_hook()
-    {
-        $this->loginpage_hook();
-    }
-
-    /**
-     * Called when user goes directly to login page
-     */
-    public function loginpage_hook()
-    {
-        global $CFG, $DB, $USER, $SESSION;
-        $this->log("In loginpage_hook");
     }
 
     /**
@@ -54,22 +36,13 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
      */
     public function user_login($username, $password)
     {
-        global $CFG, $DB;
+        global $CFG;
 
-        $host = $this->config->host;
-        $headers = [
-            'Accept' => 'application/json',
-            'Authorization' => 'Basic ' . base64_encode("$username:$password"),
-        ];
-        $client = new Client([
-                'base_uri' => $host,
-                'headers' => $headers
-            ]
-        );
+        $auth = AuthenticatorFactory::create($this);
 
         try {
-            $response = $client->request('POST');
-            $CFG->payload = json_decode($response->getBody()->getContents(), true);
+            $response = $auth->requestAuthentication($username, $password);
+            $CFG->payload = $response->getRequiredData();
             return true;
         } catch (Exception $e) {
             return false;
@@ -77,42 +50,40 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
     }
 
     /**
-     * Post authentication hook. This method is called from authenticate_user_login() for all enabled auth plugins.
+     * Post authentication hook.
+     * This method is called from authenticate_user_login() for all enabled auth plugins.
      *
-     * @param stdClass $user The user
-     * @param string $username The username
-     * @param string $password The password
+     * @param object $user user object, later used for $USER
+     * @param string $username (with system magic quotes)
+     * @param string $password plain text password (with system magic quotes)
      */
     public function user_authenticated_hook(&$user, $username, $password)
     {
         global $CFG, $DB;
 
-        $this->log("user_authenticated_hook with user ID: $user->id");
-        $this->log($CFG->payload);
-    }
+        $dbUser = $DB->get_record('user', array('username'=>$username, 'mnethostid'=>$CFG->mnet_localhost_id));
 
-    public function is_internal()
-    {
-        return false;
-    }
-
-    public function is_synchronised_with_external()
-    {
-        return true;
-    }
-
-    private function log($msg)
-    {
-        global $CFG;
-        if (!getenv('MOODLE_DEBUG')) return;
-
-        if (is_object($msg)) {
-            $msg = json_encode($msg);
-        }
-        if (is_array($msg)) {
-            $msg = print_r($msg, true);
+        if (empty($dbUser)) { // trouble
+            error_log("Cannot update non-existent user: $username");
+            print_error('auth_dbusernotexist','auth_basicauthproxy',$username);
+            die;
         }
 
-        error_log("***** BasicAuthProxy: ${msg}");
+        $needsupdate = empty($dbUser->firstname) || empty($dbUser->lastname) || empty($dbUser->email);
+
+        if ($needsupdate) {
+            require_once($CFG->dirroot . '/user/lib.php');
+            $updateuser = clone($user);
+            $updateuser->firstname = $CFG->payload['firstname'];
+            $updateuser->lastname = $CFG->payload['lastname'];
+            $updateuser->email = $CFG->payload['email'];
+
+            user_update_user($updateuser);
+
+            $user->firstname = $CFG->payload['firstname'];
+            $user->lastname = $CFG->payload['lastname'];
+            $user->email = $CFG->payload['email'];
+        }
+        unset($CFG->payload);
     }
 }
