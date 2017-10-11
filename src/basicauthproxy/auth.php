@@ -22,7 +22,7 @@ class auth_plugin_basicauthproxy extends auth_plugin_base
     public function __construct()
     {
         global $CFG;
-        $this->authtype = 'BasicAuthProxy';
+        $this->authtype = 'basicauthproxy';
         $this->config = get_config('auth_basicauthproxy');
     }
 
