@@ -62,7 +62,7 @@ docker-compose exec moodle bash
 mysql -h mariadb -u root
 ```
 
-##### Installing the plugin
+##### Deploying the plugin to live
 * copy the 'basicauthproxy' directory and its contents to the Moodle server's directory: `/path/to/moodle/auth`. 
 It should sit at the same level as the other auth plugins, e.g. /email, /nologin, /oauth2, etc.
 * cd into the basicauthproxy directory and run `composer install`
