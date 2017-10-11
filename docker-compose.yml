@@ -30,7 +30,7 @@ services:
       - '443:443'
     volumes:
       - 'moodle_data:/bitnami'
-      - ./src/BasicAuthProxy:/opt/bitnami/moodle/auth/BasicAuthProxy
+      - ./src/basicauthproxy:/opt/bitnami/moodle/auth/basicauthproxy
       - ./development/moodle/php.ini_dev_only:/opt/bitnami/php/lib/php.ini
     depends_on:
       - mariadb
