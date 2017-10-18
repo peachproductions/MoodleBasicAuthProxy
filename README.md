@@ -74,3 +74,8 @@ cd src/basicauthproxy
 It should sit at the same level as the other auth plugins, e.g. /email, /nologin, /oauth2, etc.
 * cd into the basicauthproxy directory and run `composer install`
 * restart Moodle - plugin should be visible in admin panel
+* The plugin uses the PHP global $_SERVER['SERVER_NAME']. Please be aware of the advice given
+in the PHP Manual (http://php.net/manual/en/reserved.variables.server.php) 
+_"Note: Under Apache 2, you must set UseCanonicalName = On and ServerName. 
+Otherwise, this value reflects the hostname supplied by the client, which can be spoofed. 
+It is not safe to rely on this value in security-dependent contexts."_

@@ -4,7 +4,9 @@ namespace BasicAuthProxy;
 
 abstract class HttpClient
 {
-    protected $headers = ['Accept' => 'application/json'];
+    protected $headers = [
+        'Accept' => 'application/json'
+    ];
 
     /**
      * Send a request to HTTP endpoint passing username and password for authentication
@@ -16,7 +18,10 @@ abstract class HttpClient
      */
     public function sendAuthRequest($host, $username, $password)
     {
-        $headers = array_merge($this->headers, ['Authorization' => 'Basic ' . base64_encode("$username:$password")]);
+        $headers = array_merge($this->headers, [
+            'Authorization' => 'Basic ' . base64_encode("$username:$password"),
+            'x-moodle-auth-plugin' => $_SERVER['SERVER_NAME']
+        ]);
         $client = $this->getClient($host, $headers);
         return $this->sendRequest($client);
     }
