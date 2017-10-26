@@ -1,0 +1,44 @@
+version: '2'
+
+services:
+  auth:
+    image: php:7-apache
+    ports:
+      - '8088:80'
+      - '10443:443'
+    environment:
+      - APACHE_LOG_DIR=/tmp
+    volumes:
+      - ./development/auth/apache2.conf:/etc/apache2/apache2.conf
+      - ./development/auth/.htaccess:/var/www/html/.htaccess
+      - ./development/auth/.htpasswd:/var/www/html/.htpasswd
+      - ./development/auth/authentication_response.php:/var/www/html/response.php
+
+  mariadb:
+    image: 'bitnami/mariadb:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'mariadb_data:/bitnami'
+
+  moodle:
+    image: 'bitnami/moodle:latest'
+    environment:
+      - MOODLE_DEBUG=1
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - 'moodle_data:/bitnami'
+      - ./src/basicauthproxy:/opt/bitnami/moodle/auth/basicauthproxy
+      - ./development/moodle/php.ini_dev_only:/opt/bitnami/php/lib/php.ini
+    depends_on:
+      - mariadb
+      - auth
+
+volumes:
+  mariadb_data:
+    driver: local
+  moodle_data:
+    driver: local
+
